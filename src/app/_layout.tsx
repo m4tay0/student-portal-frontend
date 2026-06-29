@@ -1,15 +1,34 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
-
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { Tabs } from "expo-router";
+import { Text } from "react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "#2196F3",
+        tabBarInactiveTintColor: "gray",
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{ title: "Home", tabBarIcon: () => <Text>🏠</Text> }}
+      />
+      <Tabs.Screen
+        name="grades"
+        options={{ title: "Grades", tabBarIcon: () => <Text>📊</Text> }}
+      />
+      <Tabs.Screen
+        name="courses"
+        options={{ title: "Courses", tabBarIcon: () => <Text>📚</Text> }}
+      />
+      <Tabs.Screen
+        name="assignments"
+        options={{ title: "Assignments", tabBarIcon: () => <Text>📝</Text> }}
+      />
+      <Tabs.Screen
+        name="announcements"
+        options={{ title: "Announcements", tabBarIcon: () => <Text>📢</Text> }}
+      />
+    </Tabs>
   );
 }

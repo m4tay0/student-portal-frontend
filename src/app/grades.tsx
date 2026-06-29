@@ -9,7 +9,7 @@ import {
 import { getGrades } from "../services/api";
 
 export default function GradesScreen() {
-  const [grades, setGrades] = useState([]);
+  const [grades, setGrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
