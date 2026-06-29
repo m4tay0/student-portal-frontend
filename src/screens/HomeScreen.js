@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { getStudents } from "../services/api";
 
 export default function HomeScreen() {
-  const [student, setStudent] = useState<any>(null);
+  const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
