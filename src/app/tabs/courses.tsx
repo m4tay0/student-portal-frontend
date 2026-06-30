@@ -6,15 +6,15 @@ import {
     Text,
     View,
 } from "react-native";
-import { getGrades } from "../services/api";
+import { getCourses } from "../../services/api";
 
-export default function GradesScreen() {
-  const [grades, setGrades] = useState<any[]>([]);
+export default function CoursesScreen() {
+  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getGrades(1)
-      .then((res) => setGrades(res.data))
+    getCourses()
+      .then((res) => setCourses(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -23,16 +23,16 @@ export default function GradesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Grades</Text>
+      <Text style={styles.title}>Courses</Text>
       <FlatList
-        data={grades}
+        data={courses}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.courseName}>{item.courses?.name}</Text>
-            <Text>Midterm: {item.midterm}</Text>
-            <Text>Final: {item.final}</Text>
-            <Text style={styles.grade}>Grade: {item.letter_grade}</Text>
+            <Text style={styles.code}>{item.code}</Text>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.info}>Credits: {item.credits}</Text>
+            <Text style={styles.info}>Instructor: {item.instructor}</Text>
           </View>
         )}
       />
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 12,
   },
-  courseName: { fontSize: 16, fontWeight: "bold", marginBottom: 8 },
-  grade: { fontSize: 16, fontWeight: "bold", color: "#2196F3", marginTop: 4 },
+  code: { fontSize: 12, color: "#2196F3", fontWeight: "bold", marginBottom: 4 },
+  name: { fontSize: 16, fontWeight: "bold", marginBottom: 8 },
+  info: { fontSize: 14, color: "#666", marginBottom: 4 },
 });

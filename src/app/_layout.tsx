@@ -1,34 +1,30 @@
-import { Tabs } from "expo-router";
-import { Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 
-export default function TabLayout() {
+export default function RootLayout() {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Her açılışta oturumu sıfırla — kullanıcı her zaman login ekranından başlar
+    AsyncStorage.multiRemove(["token", "student"]).finally(() => {
+      setIsReady(true);
+    });
+  }, []);
+
+  if (!isReady) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: "#2196F3",
-        tabBarInactiveTintColor: "gray",
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{ title: "Home", tabBarIcon: () => <Text>🏠</Text> }}
-      />
-      <Tabs.Screen
-        name="grades"
-        options={{ title: "Grades", tabBarIcon: () => <Text>📊</Text> }}
-      />
-      <Tabs.Screen
-        name="courses"
-        options={{ title: "Courses", tabBarIcon: () => <Text>📚</Text> }}
-      />
-      <Tabs.Screen
-        name="assignments"
-        options={{ title: "Assignments", tabBarIcon: () => <Text>📝</Text> }}
-      />
-      <Tabs.Screen
-        name="announcements"
-        options={{ title: "Announcements", tabBarIcon: () => <Text>📢</Text> }}
-      />
-    </Tabs>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="login" />
+      <Stack.Screen name="tabs" />
+    </Stack>
   );
 }

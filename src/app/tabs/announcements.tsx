@@ -6,15 +6,15 @@ import {
     Text,
     View,
 } from "react-native";
-import { getAssignments } from "../services/api";
+import { getAnnouncements } from "../../services/api";
 
-export default function AssignmentsScreen() {
-  const [assignments, setAssignments] = useState<any[]>([]);
+export default function AnnouncementsScreen() {
+  const [announcements, setAnnouncements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAssignments()
-      .then((res) => setAssignments(res.data))
+    getAnnouncements()
+      .then((res) => setAnnouncements(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -23,18 +23,15 @@ export default function AssignmentsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Assignments</Text>
+      <Text style={styles.title}>Announcements</Text>
       <FlatList
-        data={assignments}
+        data={announcements}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.cardTitle}>{item.title}</Text>
             <Text style={styles.course}>{item.courses?.name}</Text>
-            <Text style={styles.due}>
-              Due: {new Date(item.due_date).toLocaleDateString()}
-            </Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <Text style={styles.content}>{item.content}</Text>
           </View>
         )}
       />
@@ -53,7 +50,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 4 },
-  course: { fontSize: 12, color: "#666", marginBottom: 4 },
-  due: { fontSize: 12, color: "#f44336", marginBottom: 8 },
-  description: { fontSize: 14, color: "#333" },
+  course: { fontSize: 12, color: "#666", marginBottom: 8 },
+  content: { fontSize: 14, color: "#333" },
 });

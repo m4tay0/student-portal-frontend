@@ -1,14 +1,16 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { getStudents } from "../services/api";
 
 export default function HomeScreen() {
   const [student, setStudent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getStudents()
-      .then((res) => setStudent(res.data[0]))
+    AsyncStorage.getItem("student")
+      .then((data) => {
+        if (data) setStudent(JSON.parse(data));
+      })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);

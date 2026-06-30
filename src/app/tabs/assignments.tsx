@@ -6,15 +6,15 @@ import {
     Text,
     View,
 } from "react-native";
-import { getCourses } from "../services/api";
+import { getAssignments } from "../../services/api";
 
-export default function CoursesScreen() {
-  const [courses, setCourses] = useState<any[]>([]);
+export default function AssignmentsScreen() {
+  const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCourses()
-      .then((res) => setCourses(res.data))
+    getAssignments()
+      .then((res) => setAssignments(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -23,16 +23,18 @@ export default function CoursesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Courses</Text>
+      <Text style={styles.title}>Assignments</Text>
       <FlatList
-        data={courses}
+        data={assignments}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.code}>{item.code}</Text>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.info}>Credits: {item.credits}</Text>
-            <Text style={styles.info}>Instructor: {item.instructor}</Text>
+            <Text style={styles.cardTitle}>{item.title}</Text>
+            <Text style={styles.course}>{item.courses?.name}</Text>
+            <Text style={styles.due}>
+              Due: {new Date(item.due_date).toLocaleDateString()}
+            </Text>
+            <Text style={styles.description}>{item.description}</Text>
           </View>
         )}
       />
@@ -50,7 +52,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 12,
   },
-  code: { fontSize: 12, color: "#2196F3", fontWeight: "bold", marginBottom: 4 },
-  name: { fontSize: 16, fontWeight: "bold", marginBottom: 8 },
-  info: { fontSize: 14, color: "#666", marginBottom: 4 },
+  cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 4 },
+  course: { fontSize: 12, color: "#666", marginBottom: 4 },
+  due: { fontSize: 12, color: "#f44336", marginBottom: 8 },
+  description: { fontSize: 14, color: "#333" },
 });
