@@ -287,6 +287,8 @@ export default function ProfileScreen() {
               secureTextEntry
               value={newPassword}
               onChangeText={setNewPassword}
+              onSubmitEditing={handlePassChange}
+              returnKeyType="go"
             />
 
             {msg.text ? (

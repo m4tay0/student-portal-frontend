@@ -191,6 +191,8 @@ export default function LoginScreen() {
               onChangeText={setEmail}
               autoCapitalize="none"
               keyboardType="email-address"
+              onSubmitEditing={handleEmailSubmit}
+              returnKeyType="next"
             />
             {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
             <TouchableOpacity
@@ -222,6 +224,8 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              onSubmitEditing={handleSetPassword}
+              returnKeyType="go"
             />
             {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
             <TouchableOpacity
@@ -256,6 +260,8 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              onSubmitEditing={handleLogin}
+              returnKeyType="go"
             />
             {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
             <TouchableOpacity

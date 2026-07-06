@@ -1,10 +1,10 @@
 import { Tabs } from "expo-router";
 import { Text } from "react-native";
+import { useTheme } from "../../context/ThemeContext";
 
 const TAB_CONFIG = {
   ACTIVE_COLOR: "#3B82F6",
   INACTIVE_COLOR: "#64748B",
-  BG_COLOR: "#0F172A",
   HOME: "Ana Sayfa",
   COURSES: "Akademik",
   ADVISORS: "Danışmanım",
@@ -12,6 +12,8 @@ const TAB_CONFIG = {
 } as const;
 
 export default function TabLayout() {
+  const { colors } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
@@ -19,8 +21,8 @@ export default function TabLayout() {
         tabBarActiveTintColor: TAB_CONFIG.ACTIVE_COLOR,
         tabBarInactiveTintColor: TAB_CONFIG.INACTIVE_COLOR,
         tabBarStyle: {
-          backgroundColor: TAB_CONFIG.BG_COLOR,
-          borderTopColor: "rgba(255, 255, 255, 0.1)",
+          backgroundColor: colors.tabBarBg,
+          borderTopColor: colors.tabBarBorder,
           borderTopWidth: 1,
           height: 64,
           paddingBottom: 8,

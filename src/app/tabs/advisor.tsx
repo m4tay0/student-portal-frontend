@@ -16,6 +16,7 @@ import {
   getMyAdvisor,
   sendMessage,
 } from "../../services/api";
+import { useTheme } from "../../context/ThemeContext";
 
 const LABELS = {
   TITLE: "Danışmanlık Modülü",
@@ -40,6 +41,7 @@ const LABELS = {
 type ActiveTab = "info" | "appointments" | "messages";
 
 export default function AdvisorScreen() {
+  const { colors } = useTheme();
   const [student, setStudent] = useState<any>(null);
   const [advisor, setAdvisor] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -119,75 +121,84 @@ export default function AdvisorScreen() {
     }
   };
 
-  if (loading) return <ActivityIndicator style={styles.center} size="large" />;
+  if (loading) {
+    return (
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{LABELS.TITLE}</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>{LABELS.TITLE}</Text>
 
-      <View style={styles.tabBar}>
+      <View style={[styles.tabBar, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}>
         <TouchableOpacity
-          style={[styles.tabBtn, activeTab === "info" && styles.activeTabBtn]}
+          style={[styles.tabBtn, activeTab === "info" && { backgroundColor: colors.primaryLight }]}
           onPress={() => setActiveTab("info")}
         >
-          <Text style={[styles.tabText, activeTab === "info" && styles.activeTabText]}>
+          <Text style={[styles.tabText, { color: colors.subText }, activeTab === "info" && { color: colors.primary, fontWeight: "700" }]}>
             {LABELS.TAB_INFO}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tabBtn, activeTab === "appointments" && styles.activeTabBtn]}
+          style={[styles.tabBtn, activeTab === "appointments" && { backgroundColor: colors.primaryLight }]}
           onPress={() => setActiveTab("appointments")}
         >
-          <Text style={[styles.tabText, activeTab === "appointments" && styles.activeTabText]}>
+          <Text style={[styles.tabText, { color: colors.subText }, activeTab === "appointments" && { color: colors.primary, fontWeight: "700" }]}>
             {LABELS.TAB_APPOINTMENTS}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tabBtn, activeTab === "messages" && styles.activeTabBtn]}
+          style={[styles.tabBtn, activeTab === "messages" && { backgroundColor: colors.primaryLight }]}
           onPress={() => setActiveTab("messages")}
         >
-          <Text style={[styles.tabText, activeTab === "messages" && styles.activeTabText]}>
+          <Text style={[styles.tabText, { color: colors.subText }, activeTab === "messages" && { color: colors.primary, fontWeight: "700" }]}>
             {LABELS.TAB_MESSAGES}
           </Text>
         </TouchableOpacity>
       </View>
 
       {activeTab === "info" && (
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}>
           {advisor ? (
             <>
-              <Text style={styles.advName}>
+              <Text style={[styles.advName, { color: colors.text }]}>
                 {advisor.title} {advisor.first_name} {advisor.last_name}
               </Text>
-              <Text style={styles.advInfo}>
-                {LABELS.EMAIL} {advisor.email}
+              <Text style={[styles.advInfo, { color: colors.subText }]}>
+                {LABELS.EMAIL} <Text style={{ color: colors.text }}>{advisor.email}</Text>
               </Text>
-              <Text style={styles.advInfo}>
-                {LABELS.OFFICE} {advisor.office}
+              <Text style={[styles.advInfo, { color: colors.subText }]}>
+                {LABELS.OFFICE} <Text style={{ color: colors.text }}>{advisor.office}</Text>
               </Text>
-              <View style={styles.hoursBox}>
-                <Text style={styles.hoursTitle}>{LABELS.HOURS}</Text>
-                <Text style={styles.hoursText}>{advisor.office_hours}</Text>
+              <View style={[styles.hoursBox, { backgroundColor: colors.primaryLight }]}>
+                <Text style={[styles.hoursTitle, { color: colors.primary }]}>{LABELS.HOURS}</Text>
+                <Text style={[styles.hoursText, { color: colors.text }]}>{advisor.office_hours}</Text>
               </View>
             </>
           ) : (
-            <Text style={styles.emptyText}>{LABELS.NO_ADVISOR}</Text>
+            <Text style={[styles.emptyText, { color: colors.subText }]}>{LABELS.NO_ADVISOR}</Text>
           )}
         </View>
       )}
 
       {activeTab === "appointments" && (
         <View style={styles.tabContent}>
-          <View style={styles.formCard}>
-            <Text style={styles.formTitle}>{LABELS.NEW_APPOINTMENT}</Text>
+          <View style={[styles.formCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}>
+            <Text style={[styles.formTitle, { color: colors.text }]}>{LABELS.NEW_APPOINTMENT}</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder, color: colors.text }]}
               placeholder={LABELS.APPOINTMENT_NOTE_PLACEHOLDER}
+              placeholderTextColor={colors.subText}
               value={noteInput}
               onChangeText={setNoteInput}
+              onSubmitEditing={handleBookAppointment}
+              returnKeyType="send"
             />
             <TouchableOpacity
-              style={styles.actionBtn}
+              style={[styles.actionBtn, { backgroundColor: colors.primary }]}
               onPress={handleBookAppointment}
               disabled={submitting}
             >
@@ -198,18 +209,18 @@ export default function AdvisorScreen() {
           <FlatList
             data={appointments}
             keyExtractor={(item) => item.id.toString()}
-            ListEmptyComponent={<Text style={styles.emptyText}>{LABELS.NO_APPOINTMENTS}</Text>}
+            ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.subText }]}>{LABELS.NO_APPOINTMENTS}</Text>}
             renderItem={({ item }) => (
-              <View style={styles.listCard}>
+              <View style={[styles.listCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}>
                 <View style={styles.row}>
-                  <Text style={styles.dateText}>
-                    {new Date(item.appointment_date).toLocaleDateString()}
+                  <Text style={[styles.dateText, { color: colors.text }]}>
+                    {new Date(item.appointment_date).toLocaleDateString("tr-TR")}
                   </Text>
-                  <View style={styles.statusBadge}>
-                    <Text style={styles.statusText}>{LABELS.STATUS_APPROVED}</Text>
+                  <View style={[styles.statusBadge, { backgroundColor: colors.accentLight }]}>
+                    <Text style={[styles.statusText, { color: colors.accent }]}>{LABELS.STATUS_APPROVED}</Text>
                   </View>
                 </View>
-                <Text style={styles.noteText}>{item.notes}</Text>
+                <Text style={[styles.noteText, { color: colors.subText }]}>{item.notes}</Text>
               </View>
             )}
           />
@@ -221,20 +232,22 @@ export default function AdvisorScreen() {
           <FlatList
             data={messages}
             keyExtractor={(item) => item.id.toString()}
-            ListEmptyComponent={<Text style={styles.emptyText}>{LABELS.NO_MESSAGES}</Text>}
+            ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.subText }]}>{LABELS.NO_MESSAGES}</Text>}
             renderItem={({ item }) => {
               const isStudent = item.sender_type === LABELS.SENDER_STUDENT;
               return (
                 <View
                   style={[
                     styles.msgBubble,
-                    isStudent ? styles.studentBubble : styles.advisorBubble,
+                    isStudent
+                      ? [styles.studentBubble, { backgroundColor: colors.primary }]
+                      : [styles.advisorBubble, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder, borderWidth: 1 }],
                   ]}
                 >
                   <Text
                     style={[
                       styles.msgText,
-                      isStudent ? styles.studentMsgText : styles.advisorMsgText,
+                      isStudent ? styles.studentMsgText : { color: colors.text },
                     ]}
                   >
                     {item.content}
@@ -246,13 +259,16 @@ export default function AdvisorScreen() {
 
           <View style={styles.sendRow}>
             <TextInput
-              style={styles.msgInput}
+              style={[styles.msgInput, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder, color: colors.text }]}
               placeholder={LABELS.MESSAGE_PLACEHOLDER}
+              placeholderTextColor={colors.subText}
               value={msgInput}
               onChangeText={setMsgInput}
+              onSubmitEditing={handleSendMessage}
+              returnKeyType="send"
             />
             <TouchableOpacity
-              style={styles.sendBtn}
+              style={[styles.sendBtn, { backgroundColor: colors.primary }]}
               onPress={handleSendMessage}
               disabled={submitting}
             >
@@ -266,41 +282,38 @@ export default function AdvisorScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#fff" },
+  container: { flex: 1, padding: 16 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 12, color: "#111" },
-  tabBar: { flexDirection: "row", marginBottom: 16, backgroundColor: "#f1f3f5", borderRadius: 8, padding: 4 },
-  tabBtn: { flex: 1, paddingVertical: 8, alignItems: "center", borderRadius: 6 },
-  activeTabBtn: { backgroundColor: "#fff", elevation: 2 },
-  tabText: { fontSize: 13, color: "#495057", fontWeight: "600" },
-  activeTabText: { color: "#2196F3" },
-  card: { backgroundColor: "#f8f9fa", padding: 20, borderRadius: 12, borderWidth: 1, borderColor: "#e9ecef" },
-  advName: { fontSize: 18, fontWeight: "bold", color: "#212529", marginBottom: 12 },
-  advInfo: { fontSize: 14, color: "#495057", marginBottom: 6 },
-  hoursBox: { marginTop: 12, padding: 12, backgroundColor: "#e3f2fd", borderRadius: 8 },
-  hoursTitle: { fontSize: 13, fontWeight: "bold", color: "#1565c0", marginBottom: 4 },
-  hoursText: { fontSize: 13, color: "#0d47a1" },
+  title: { fontSize: 22, fontWeight: "800", marginBottom: 14 },
+  tabBar: { flexDirection: "row", marginBottom: 16, borderRadius: 12, padding: 4, borderWidth: 1 },
+  tabBtn: { flex: 1, paddingVertical: 10, alignItems: "center", borderRadius: 8 },
+  tabText: { fontSize: 13, fontWeight: "600" },
+  card: { padding: 20, borderRadius: 16, borderWidth: 1 },
+  advName: { fontSize: 18, fontWeight: "800", marginBottom: 12 },
+  advInfo: { fontSize: 14, marginBottom: 6 },
+  hoursBox: { marginTop: 14, padding: 14, borderRadius: 12 },
+  hoursTitle: { fontSize: 13, fontWeight: "800", marginBottom: 4 },
+  hoursText: { fontSize: 13, fontWeight: "600" },
   tabContent: { flex: 1 },
-  formCard: { backgroundColor: "#f8f9fa", padding: 14, borderRadius: 10, marginBottom: 16, borderWidth: 1, borderColor: "#e9ecef" },
-  formTitle: { fontSize: 14, fontWeight: "bold", marginBottom: 8, color: "#212529" },
-  input: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#ced4da", borderRadius: 6, padding: 10, marginBottom: 10, fontSize: 14 },
-  actionBtn: { backgroundColor: "#2196F3", paddingVertical: 10, borderRadius: 6, alignItems: "center" },
-  actionBtnText: { color: "#fff", fontWeight: "600", fontSize: 14 },
-  listCard: { backgroundColor: "#fff", padding: 14, borderRadius: 8, marginBottom: 10, borderWidth: 1, borderColor: "#dee2e6" },
-  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 },
-  dateText: { fontSize: 13, fontWeight: "bold", color: "#495057" },
-  statusBadge: { backgroundColor: "#d4edda", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 },
-  statusText: { color: "#155724", fontSize: 11, fontWeight: "bold" },
-  noteText: { fontSize: 14, color: "#212529" },
-  emptyText: { textAlign: "center", color: "#6c757d", marginTop: 20, fontStyle: "italic" },
-  msgBubble: { padding: 12, borderRadius: 12, marginBottom: 8, maxWidth: "80%" },
-  studentBubble: { alignSelf: "flex-end", backgroundColor: "#2196F3", borderBottomRightRadius: 2 },
-  advisorBubble: { alignSelf: "flex-start", backgroundColor: "#e9ecef", borderBottomLeftRadius: 2 },
-  msgText: { fontSize: 14 },
-  studentMsgText: { color: "#fff" },
-  advisorMsgText: { color: "#212529" },
-  sendRow: { flexDirection: "row", marginTop: 8 },
-  msgInput: { flex: 1, backgroundColor: "#f8f9fa", borderWidth: 1, borderColor: "#ced4da", borderRadius: 20, paddingHorizontal: 16, paddingVertical: 8, fontSize: 14 },
-  sendBtn: { backgroundColor: "#2196F3", justifyContent: "center", paddingHorizontal: 16, borderRadius: 20, marginLeft: 8 },
-  sendBtnText: { color: "#fff", fontWeight: "bold", fontSize: 14 },
+  formCard: { padding: 16, borderRadius: 16, marginBottom: 16, borderWidth: 1 },
+  formTitle: { fontSize: 15, fontWeight: "800", marginBottom: 10 },
+  input: { borderWidth: 1, borderRadius: 10, padding: 12, marginBottom: 12, fontSize: 14 },
+  actionBtn: { paddingVertical: 12, borderRadius: 10, alignItems: "center" },
+  actionBtnText: { color: "#fff", fontWeight: "700", fontSize: 14 },
+  listCard: { padding: 16, borderRadius: 14, marginBottom: 12, borderWidth: 1 },
+  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
+  dateText: { fontSize: 14, fontWeight: "700" },
+  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6 },
+  statusText: { fontSize: 11, fontWeight: "800" },
+  noteText: { fontSize: 14, lineHeight: 20 },
+  emptyText: { textAlign: "center", marginTop: 24, fontStyle: "italic", fontSize: 14 },
+  msgBubble: { padding: 14, borderRadius: 16, marginBottom: 10, maxWidth: "80%" },
+  studentBubble: { alignSelf: "flex-end", borderBottomRightRadius: 4 },
+  advisorBubble: { alignSelf: "flex-start", borderBottomLeftRadius: 4 },
+  msgText: { fontSize: 14, lineHeight: 20 },
+  studentMsgText: { color: "#fff", fontWeight: "500" },
+  sendRow: { flexDirection: "row", marginTop: 10, alignItems: "center" },
+  msgInput: { flex: 1, borderWidth: 1, borderRadius: 24, paddingHorizontal: 18, paddingVertical: 10, fontSize: 14 },
+  sendBtn: { justifyContent: "center", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 24, marginLeft: 8 },
+  sendBtnText: { color: "#fff", fontWeight: "800", fontSize: 14 },
 });

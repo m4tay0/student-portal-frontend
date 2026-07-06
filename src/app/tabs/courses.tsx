@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { getCourses } from "../../services/api";
+import { useTheme } from "../../context/ThemeContext";
 
 const LABELS = {
   TITLE: "Dersler & Program",
@@ -25,6 +26,7 @@ const DAYS_OF_WEEK = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"] a
 type ViewMode = "list" | "calendar";
 
 export default function CoursesScreen() {
+  const { colors } = useTheme();
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
@@ -37,7 +39,13 @@ export default function CoursesScreen() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <ActivityIndicator style={styles.center} size="large" color="#2196F3" />;
+  if (loading) {
+    return (
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   // Filter and sort courses for calendar view
   const coursesForDay = courses
@@ -45,24 +53,24 @@ export default function CoursesScreen() {
     .sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{LABELS.TITLE}</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>{LABELS.TITLE}</Text>
 
       {/* Görünüm Değiştirme Toggle */}
-      <View style={styles.toggleContainer}>
+      <View style={[styles.toggleContainer, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder, borderWidth: 1 }]}>
         <TouchableOpacity
-          style={[styles.toggleButton, viewMode === "list" && styles.toggleButtonActive]}
+          style={[styles.toggleButton, viewMode === "list" && { backgroundColor: colors.primaryLight }]}
           onPress={() => setViewMode("list")}
         >
-          <Text style={[styles.toggleText, viewMode === "list" && styles.toggleTextActive]}>
+          <Text style={[styles.toggleText, { color: colors.subText }, viewMode === "list" && { color: colors.primary, fontWeight: "800" }]}>
             {LABELS.VIEW_LIST}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.toggleButton, viewMode === "calendar" && styles.toggleButtonActive]}
+          style={[styles.toggleButton, viewMode === "calendar" && { backgroundColor: colors.primaryLight }]}
           onPress={() => setViewMode("calendar")}
         >
-          <Text style={[styles.toggleText, viewMode === "calendar" && styles.toggleTextActive]}>
+          <Text style={[styles.toggleText, { color: colors.subText }, viewMode === "calendar" && { color: colors.primary, fontWeight: "800" }]}>
             {LABELS.VIEW_CALENDAR}
           </Text>
         </TouchableOpacity>
@@ -74,35 +82,35 @@ export default function CoursesScreen() {
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
           renderItem={({ item }) => (
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}>
               <View style={styles.headerRow}>
-                <Text style={styles.code}>{item.code}</Text>
+                <Text style={[styles.code, { color: colors.primary }]}>{item.code}</Text>
                 {item.room ? (
-                  <View style={styles.roomBadge}>
-                    <Text style={styles.roomText}>{item.room}</Text>
+                  <View style={[styles.roomBadge, { backgroundColor: colors.primaryLight }]}>
+                    <Text style={[styles.roomText, { color: colors.primary }]}>{item.room}</Text>
                   </View>
                 ) : null}
               </View>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.info}>
-                {LABELS.CREDITS} {item.credits}
+              <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+              <Text style={[styles.info, { color: colors.subText }]}>
+                {LABELS.CREDITS} <Text style={{ color: colors.text }}>{item.credits}</Text>
               </Text>
-              <Text style={styles.info}>
-                {LABELS.INSTRUCTOR} {item.instructor || "-"}
+              <Text style={[styles.info, { color: colors.subText }]}>
+                {LABELS.INSTRUCTOR} <Text style={{ color: colors.text }}>{item.instructor || "-"}</Text>
               </Text>
               {item.day_of_week && item.start_time ? (
-                <View style={styles.scheduleBox}>
-                  <Text style={styles.scheduleText}>
+                <View style={[styles.scheduleBox, { borderTopColor: colors.cardBorder }]}>
+                  <Text style={[styles.scheduleText, { color: colors.text }]}>
                     {LABELS.SCHEDULE} {item.day_of_week} | {item.start_time} - {item.end_time}
                   </Text>
                   {item.room ? (
-                    <Text style={styles.scheduleText}>
+                    <Text style={[styles.scheduleText, { color: colors.text }]}>
                       {LABELS.ROOM} {item.room}
                     </Text>
                   ) : null}
                 </View>
               ) : (
-                <Text style={styles.missingSchedule}>{LABELS.NOT_ASSIGNED}</Text>
+                <Text style={[styles.missingSchedule, { color: colors.subText }]}>{LABELS.NOT_ASSIGNED}</Text>
               )}
             </View>
           )}
@@ -114,10 +122,14 @@ export default function CoursesScreen() {
             {DAYS_OF_WEEK.map((day) => (
               <TouchableOpacity
                 key={day}
-                style={[styles.dayTab, selectedDay === day && styles.dayTabActive]}
+                style={[
+                  styles.dayTab,
+                  { backgroundColor: colors.cardBg, borderColor: colors.cardBorder, borderWidth: 1 },
+                  selectedDay === day && { backgroundColor: colors.primary, borderColor: colors.primary },
+                ]}
                 onPress={() => setSelectedDay(day)}
               >
-                <Text style={[styles.dayTabText, selectedDay === day && styles.dayTabTextActive]}>
+                <Text style={[styles.dayTabText, { color: colors.subText }, selectedDay === day && { color: "#FFFFFF", fontWeight: "800" }]}>
                   {day}
                 </Text>
               </TouchableOpacity>
@@ -127,7 +139,7 @@ export default function CoursesScreen() {
           {/* Günün Program Çizelgesi */}
           {coursesForDay.length === 0 ? (
             <View style={styles.emptyDayContainer}>
-              <Text style={styles.emptyDayText}>🎉 {selectedDay} günü dersiniz bulunmuyor!</Text>
+              <Text style={[styles.emptyDayText, { color: colors.subText }]}>🎉 {selectedDay} günü dersiniz bulunmuyor!</Text>
             </View>
           ) : (
             <FlatList
@@ -137,22 +149,22 @@ export default function CoursesScreen() {
               renderItem={({ item }) => (
                 <View style={styles.timelineItem}>
                   <View style={styles.timeColumn}>
-                    <Text style={styles.startTime}>{item.start_time}</Text>
-                    <Text style={styles.endTime}>{item.end_time}</Text>
+                    <Text style={[styles.startTime, { color: colors.primary }]}>{item.start_time}</Text>
+                    <Text style={[styles.endTime, { color: colors.subText }]}>{item.end_time}</Text>
                   </View>
-                  <View style={styles.timelineLine} />
-                  <View style={styles.timelineCard}>
+                  <View style={[styles.timelineLine, { backgroundColor: colors.primary }]} />
+                  <View style={[styles.timelineCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder, borderLeftColor: colors.primary }]}>
                     <View style={styles.headerRow}>
-                      <Text style={styles.code}>{item.code}</Text>
+                      <Text style={[styles.code, { color: colors.primary }]}>{item.code}</Text>
                       {item.room ? (
-                        <View style={styles.roomBadge}>
-                          <Text style={styles.roomText}>{item.room}</Text>
+                        <View style={[styles.roomBadge, { backgroundColor: colors.primaryLight }]}>
+                          <Text style={[styles.roomText, { color: colors.primary }]}>{item.room}</Text>
                         </View>
                       ) : null}
                     </View>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.info}>
-                      {LABELS.INSTRUCTOR} {item.instructor || "-"}
+                    <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+                    <Text style={[styles.info, { color: colors.subText }]}>
+                      {LABELS.INSTRUCTOR} <Text style={{ color: colors.text }}>{item.instructor || "-"}</Text>
                     </Text>
                   </View>
                 </View>
@@ -166,13 +178,12 @@ export default function CoursesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#F8F9FA" },
+  container: { flex: 1, padding: 16 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16, color: "#111" },
+  title: { fontSize: 22, fontWeight: "800", marginBottom: 14 },
   toggleContainer: {
     flexDirection: "row",
-    backgroundColor: "#E9ECEF",
-    borderRadius: 10,
+    borderRadius: 14,
     padding: 4,
     marginBottom: 16,
   },
@@ -180,29 +191,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     alignItems: "center",
-    borderRadius: 8,
+    borderRadius: 10,
   },
-  toggleButtonActive: {
-    backgroundColor: "#FFFFFF",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
-    shadowRadius: 2,
-  },
-  toggleText: { fontSize: 14, fontWeight: "600", color: "#6C757D" },
-  toggleTextActive: { color: "#1976D2", fontWeight: "bold" },
+  toggleText: { fontSize: 14, fontWeight: "600" },
   listContainer: { paddingBottom: 20 },
   card: {
-    backgroundColor: "#FFFFFF",
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom: 12,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    borderWidth: 1,
   },
   headerRow: {
     flexDirection: "row",
@@ -210,45 +207,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 6,
   },
-  code: { fontSize: 13, color: "#2196F3", fontWeight: "bold" },
+  code: { fontSize: 13, fontWeight: "800" },
   roomBadge: {
-    backgroundColor: "#E3F2FD",
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 8,
   },
-  roomText: { fontSize: 11, color: "#1976D2", fontWeight: "700" },
-  name: { fontSize: 16, fontWeight: "bold", marginBottom: 8, color: "#212529" },
-  info: { fontSize: 13, color: "#495057", marginBottom: 4 },
+  roomText: { fontSize: 11, fontWeight: "800" },
+  name: { fontSize: 16, fontWeight: "800", marginBottom: 8 },
+  info: { fontSize: 13, marginBottom: 4 },
   scheduleBox: {
     marginTop: 8,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#EEEEEE",
   },
-  scheduleText: { fontSize: 13, color: "#2b3035", fontWeight: "500", marginTop: 2 },
-  missingSchedule: { fontSize: 12, color: "#6c757d", fontStyle: "italic", marginTop: 6 },
+  scheduleText: { fontSize: 13, fontWeight: "600", marginTop: 2 },
+  missingSchedule: { fontSize: 12, fontStyle: "italic", marginTop: 6 },
   calendarContainer: { flex: 1 },
   daysScroll: { maxHeight: 50, marginBottom: 12 },
   dayTab: {
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: "#E9ECEF",
     marginRight: 8,
   },
-  dayTabActive: {
-    backgroundColor: "#1976D2",
-  },
-  dayTabText: { fontSize: 14, fontWeight: "600", color: "#495057" },
-  dayTabTextActive: { color: "#FFFFFF", fontWeight: "bold" },
+  dayTabText: { fontSize: 14, fontWeight: "600" },
   emptyDayContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 40,
   },
-  emptyDayText: { fontSize: 16, fontWeight: "600", color: "#6C757D" },
+  emptyDayText: { fontSize: 15, fontWeight: "600" },
   timelineList: { paddingBottom: 20 },
   timelineItem: {
     flexDirection: "row",
@@ -261,25 +251,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingRight: 8,
   },
-  startTime: { fontSize: 14, fontWeight: "bold", color: "#1976D2" },
-  endTime: { fontSize: 12, color: "#6C757D", marginTop: 2 },
+  startTime: { fontSize: 14, fontWeight: "800" },
+  endTime: { fontSize: 12, marginTop: 2 },
   timelineLine: {
     width: 3,
-    backgroundColor: "#90CAF9",
     borderRadius: 2,
     marginRight: 12,
   },
   timelineCard: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
     padding: 14,
-    borderRadius: 10,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    borderRadius: 14,
+    borderWidth: 1,
     borderLeftWidth: 4,
-    borderLeftColor: "#1976D2",
   },
 });
