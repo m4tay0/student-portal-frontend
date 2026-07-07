@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getMyDocuments, requestDocument, verifyDocument } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getMyDocuments, requestDocument, verifyDocument } from "../../services/api";
 
 const LABELS = {
   TITLE: "E-Belgeler & QR Doğrulama",
@@ -63,7 +63,7 @@ export default function DocumentsScreen() {
       const res = await getMyDocuments(student.id);
       setDocuments(res.data);
     } catch (err) {
-      console.error(err);
+      // handled silently
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function DocumentsScreen() {
       await requestDocument({ student_id: studentId, document_type: type });
       await loadDocuments();
     } catch (err) {
-      console.error(err);
+      // handled silently
     } finally {
       setReqLoading(false);
     }

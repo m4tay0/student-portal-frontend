@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useTheme } from "../../context/ThemeContext";
 import {
   bookAppointment,
   getAppointments,
@@ -19,7 +20,6 @@ import {
   getMyAdvisor,
   sendMessage,
 } from "../../services/api";
-import { useTheme } from "../../context/ThemeContext";
 
 const LABELS = {
   TITLE: "Akademik Danışmanlık",
@@ -81,7 +81,7 @@ export default function AdvisorsScreen() {
         ]);
       }
     } catch (err) {
-      console.error(err);
+      // handled silently
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ export default function AdvisorsScreen() {
       const res = await getMessages(sId);
       setMessages(res.data);
     } catch (err) {
-      console.error(err);
+      // handled silently
     }
   };
 
@@ -101,7 +101,7 @@ export default function AdvisorsScreen() {
       const res = await getAppointments(sId);
       setAppointments(res.data);
     } catch (err) {
-      console.error(err);
+      // handled silently
     }
   };
 
@@ -118,7 +118,7 @@ export default function AdvisorsScreen() {
       setNewMessage("");
       await fetchMessages(studentId, advisor.id);
     } catch (err) {
-      console.error(err);
+      // handled silently
     } finally {
       setSendingMsg(false);
     }
@@ -137,7 +137,7 @@ export default function AdvisorsScreen() {
       setAppointNote("");
       await fetchAppointments(studentId);
     } catch (err) {
-      console.error(err);
+      // handled silently
     } finally {
       setBooking(false);
     }

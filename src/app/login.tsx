@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as LocalAuthentication from "expo-local-authentication";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -11,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import * as LocalAuthentication from "expo-local-authentication";
 import { checkEmail, login, register } from "../services/api";
 
 type Step = "email" | "set-password" | "login";

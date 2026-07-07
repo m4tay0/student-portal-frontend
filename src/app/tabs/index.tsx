@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getNotifications, markNotificationRead } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getNotifications, markNotificationRead } from "../../services/api";
 
 const LABELS = {
   WELCOME_PREFIX: "Hoş Geldiniz,",
@@ -23,6 +23,8 @@ const LABELS = {
   BTN_COURSES: "📚 Dersler & Program",
   BTN_GRADES: "📊 Not Kartı & AGNO Simülasyonu",
   BTN_PROFILE: "👤 Profil, Şifre & Dijital Kimlik",
+  BTN_AI: "🤖 Kampüs AI Akademik Asistan",
+  BTN_FOCUS: "⏱️ Odak Modu (Pomodoro) & Sayaç",
   UNREAD_SUFFIX: "Yeni",
   NOTIF_CENTER_TITLE: "🔔 Bildirim Merkezi (Son Duyurular)",
   VIEW_ALL: "Tümünü Gör →",
@@ -42,6 +44,8 @@ const ROUTES = {
   COURSES: "/tabs/courses",
   GRADES: "/tabs/grades",
   PROFILE: "/tabs/profile",
+  AI_ASSISTANT: "/tabs/ai-assistant",
+  FOCUS: "/tabs/focus",
 } as const;
 
 export default function HomeScreen() {
@@ -169,6 +173,22 @@ export default function HomeScreen() {
           {/* Hızlı Erişim & İşlemler Grid */}
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{LABELS.QUICK_ACCESS}</Text>
           <View style={styles.gridContainer}>
+            <TouchableOpacity
+              style={[styles.gridCard, { backgroundColor: colors.accentLight, borderColor: colors.accent }]}
+              onPress={() => router.push(ROUTES.AI_ASSISTANT as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.gridText, { color: colors.accent, fontWeight: "800" }]}>{LABELS.BTN_AI}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.gridCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}
+              onPress={() => router.push(ROUTES.FOCUS as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.gridText, { color: colors.primary, fontWeight: "800" }]}>{LABELS.BTN_FOCUS}</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={[styles.gridCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
               onPress={() => router.push(ROUTES.COURSES as any)}

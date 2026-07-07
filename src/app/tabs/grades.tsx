@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getGrades } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getGrades } from "../../services/api";
 
 const GRADE_POINTS: Record<string, number> = {
   AA: 4.0,
@@ -53,7 +53,7 @@ export default function GradesScreen() {
           });
           setSimulatedGrades(initialSim);
         })
-        .catch((err) => console.error(err))
+        .catch(() => {})
         .finally(() => setLoading(false));
     });
   }, []);

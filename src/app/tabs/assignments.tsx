@@ -6,8 +6,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { getAssignments } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getAssignments } from "../../services/api";
 
 const LABELS = {
   TITLE: "📝 Ödevler & Projeler",
@@ -23,7 +23,7 @@ export default function AssignmentsScreen() {
   useEffect(() => {
     getAssignments()
       .then((res) => setAssignments(res.data))
-      .catch((err) => console.error(err))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 

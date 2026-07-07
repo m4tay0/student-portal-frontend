@@ -6,8 +6,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { getAnnouncements } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getAnnouncements } from "../../services/api";
 
 const LABELS = {
   TITLE: "📢 Kampüs & Ders Duyuruları",
@@ -22,7 +22,7 @@ export default function AnnouncementsScreen() {
   useEffect(() => {
     getAnnouncements()
       .then((res) => setAnnouncements(res.data))
-      .catch((err) => console.error(err))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 

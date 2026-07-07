@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -8,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getCourses } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getCourses } from "../../services/api";
 
 const LABELS = {
   TITLE: "Dersler & Program",
@@ -26,6 +27,7 @@ const DAYS_OF_WEEK = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"] a
 type ViewMode = "list" | "calendar";
 
 export default function CoursesScreen() {
+  const router = useRouter();
   const { colors } = useTheme();
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ export default function CoursesScreen() {
   useEffect(() => {
     getCourses()
       .then((res) => setCourses(res.data))
-      .catch((err) => console.error(err))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -55,6 +57,17 @@ export default function CoursesScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.title, { color: colors.text }]}>{LABELS.TITLE}</Text>
+
+      {/* Odak Modu Banner */}
+      <TouchableOpacity
+        style={[styles.focusBanner, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}
+        onPress={() => router.push("/tabs/focus" as any)}
+        activeOpacity={0.85}
+      >
+        <Text style={[styles.focusBannerText, { color: colors.primary }]}>
+          ⏱️ Odak Modu (Pomodoro) ile Dersi Çalış & Puan Kazan →
+        </Text>
+      </TouchableOpacity>
 
       {/* Görünüm Değiştirme Toggle */}
       <View style={[styles.toggleContainer, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder, borderWidth: 1 }]}>
@@ -181,6 +194,18 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   title: { fontSize: 22, fontWeight: "800", marginBottom: 14 },
+  focusBanner: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: "center",
+    marginBottom: 14,
+  },
+  focusBannerText: {
+    fontSize: 13,
+    fontWeight: "800",
+  },
   toggleContainer: {
     flexDirection: "row",
     borderRadius: 14,

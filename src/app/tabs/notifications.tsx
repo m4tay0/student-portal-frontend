@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getNotifications, markNotificationRead } from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
+import { getNotifications, markNotificationRead } from "../../services/api";
 
 const LABELS = {
   TITLE: "Bildirimler & Duyurular",
