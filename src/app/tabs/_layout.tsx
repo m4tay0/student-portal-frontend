@@ -52,15 +52,6 @@ export default function TabLayout() {
                 }}
             />
 
-            {/* 3. Kampüs AI (Akıllı Akademik Asistan) */}
-            <Tabs.Screen
-                name="ai-assistant"
-                options={{
-                    title: "Kampüs AI",
-                    tabBarIcon: () => <Text style={{ fontSize: 20 }}>🤖</Text>,
-                }}
-            />
-
             {/* 4. Danışmanım */}
             <Tabs.Screen
                 name="advisors"

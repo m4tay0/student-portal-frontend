@@ -44,7 +44,39 @@ const LABELS = {
     PASS_NEW_PLACEHOLDER: "Yeni Şifreniz",
     PASS_SUBMIT: "Şifreyi Güncelle",
     SUCCESS_PASS: "Şifreniz başarıyla güncellendi!",
+    BADGES_TITLE: "🏆 Kampüs Başarı Rozetleriniz (Oyunlaştırma & Puan)",
 } as const;
+
+const BADGES_LIST = [
+    {
+        id: "pomodoro_master",
+        icon: "🍅",
+        title: "Pomodoro Üstadı",
+        desc: "Odak Modunda ilk kesintisiz çalışma oturumu",
+        unlocked: true,
+    },
+    {
+        id: "doc_master",
+        icon: "📄",
+        title: "Belge Uzmanı",
+        desc: "Öğrenci işleri otomasyonundan resmi evrak sorgusu yapıldı",
+        unlocked: true,
+    },
+    {
+        id: "library_owl",
+        icon: "🦉",
+        title: "Gece Kuşu",
+        desc: "Kütüphane çalışma salonunda akşam odaklanması",
+        unlocked: true,
+    },
+    {
+        id: "perfect_score",
+        icon: "🎯",
+        title: "Tam İsabet",
+        desc: "Vize veya Final sınavından 90+ başarı notu",
+        unlocked: true,
+    },
+] as const;
 
 export default function ProfileScreen() {
     const router = useRouter();
@@ -168,6 +200,29 @@ export default function ProfileScreen() {
                 >
                     <Text style={styles.passButtonText}>{LABELS.PASS_CHANGE_BTN}</Text>
                 </TouchableOpacity>
+            </View>
+
+            {/* Kampüs Başarı Rozetleri */}
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{LABELS.BADGES_TITLE}</Text>
+            <View style={styles.badgesGrid}>
+                {BADGES_LIST.map((b) => (
+                    <View
+                        key={b.id}
+                        style={[
+                            styles.badgeCard,
+                            { backgroundColor: colors.cardBg, borderColor: colors.cardBorder },
+                            b.unlocked && { borderColor: colors.accent, borderWidth: 1.5 },
+                        ]}
+                    >
+                        <View style={[styles.badgeIconBox, { backgroundColor: b.unlocked ? colors.accentLight : colors.inputBg }]}>
+                            <Text style={styles.badgeIconEmoji}>{b.icon}</Text>
+                        </View>
+                        <Text style={[styles.badgeCardTitle, { color: colors.text }]}>{b.title}</Text>
+                        <Text style={[styles.badgeCardDesc, { color: colors.subText }]} numberOfLines={2}>
+                            {b.desc}
+                        </Text>
+                    </View>
+                ))}
             </View>
 
             {/* Campus Services Menu Grid */}
@@ -548,4 +603,28 @@ const styles = StyleSheet.create({
     modalCancelText: { fontWeight: "600", fontSize: 14 },
     msgSuccess: { color: "#34D399", fontSize: 13, marginBottom: 12, textAlign: "center", fontWeight: "600" },
     msgError: { color: "#F87171", fontSize: 13, marginBottom: 12, textAlign: "center", fontWeight: "600" },
+    badgesGrid: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 12,
+        marginBottom: 24,
+    },
+    badgeCard: {
+        width: "47%",
+        padding: 14,
+        borderRadius: 16,
+        borderWidth: 1,
+        alignItems: "center",
+    },
+    badgeIconBox: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 8,
+    },
+    badgeIconEmoji: { fontSize: 24 },
+    badgeCardTitle: { fontSize: 13, fontWeight: "800", marginBottom: 4, textAlign: "center" },
+    badgeCardDesc: { fontSize: 11, textAlign: "center", lineHeight: 15 },
 });

@@ -23,7 +23,6 @@ const LABELS = {
   BTN_COURSES: "📚 Dersler & Program",
   BTN_GRADES: "📊 Not Kartı & AGNO Simülasyonu",
   BTN_PROFILE: "👤 Profil, Şifre & Dijital Kimlik",
-  BTN_AI: "🤖 Kampüs AI Akademik Asistan",
   BTN_FOCUS: "⏱️ Odak Modu (Pomodoro) & Sayaç",
   UNREAD_SUFFIX: "Yeni",
   NOTIF_CENTER_TITLE: "🔔 Bildirim Merkezi (Son Duyurular)",
@@ -37,6 +36,14 @@ const LABELS = {
   TIMER_SEC: "Saniye",
 } as const;
 
+const CAMPUS_LIFE_DATA = {
+  TITLE: "🍽️ Günlük Kampüs Yaşamı & Kütüphane",
+  MENU_HEADER: "🍲 Günün Yemekhane Menüsü (4 Kap)",
+  MENU_ITEMS: "Mercimek Çorbası • Fırın Tavuk • Şehriyeli Pirinç Pilavı • Meyve / Ayran (780 kcal)",
+  LIB_HEADER: "💡 Merkez Kütüphane & Çalışma Salonları",
+  LIB_STATUS: "%68 Dolu (2. Kat Sessiz Okuma Salonu Müsait 🟢)",
+} as const;
+
 const ROUTES = {
   ADVISORS: "/tabs/advisors",
   DOCUMENTS: "/tabs/documents",
@@ -44,7 +51,6 @@ const ROUTES = {
   COURSES: "/tabs/courses",
   GRADES: "/tabs/grades",
   PROFILE: "/tabs/profile",
-  AI_ASSISTANT: "/tabs/ai-assistant",
   FOCUS: "/tabs/focus",
 } as const;
 
@@ -170,23 +176,31 @@ export default function HomeScreen() {
             </View>
           </View>
 
+          {/* Günlük Kampüs Yaşamı Kartı */}
+          <View style={[styles.campusLifeCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}>
+            <View style={styles.campusLifeHeader}>
+              <Text style={[styles.campusLifeTitle, { color: colors.text }]}>{CAMPUS_LIFE_DATA.TITLE}</Text>
+            </View>
+            <View style={styles.campusLifeSection}>
+              <Text style={[styles.campusLifeSub, { color: colors.accent }]}>{CAMPUS_LIFE_DATA.MENU_HEADER}</Text>
+              <Text style={[styles.campusLifeText, { color: colors.text }]}>{CAMPUS_LIFE_DATA.MENU_ITEMS}</Text>
+            </View>
+            <View style={[styles.campusLifeDivider, { backgroundColor: colors.cardBorder }]} />
+            <View style={styles.campusLifeSection}>
+              <Text style={[styles.campusLifeSub, { color: colors.primary }]}>{CAMPUS_LIFE_DATA.LIB_HEADER}</Text>
+              <Text style={[styles.campusLifeText, { color: colors.text }]}>{CAMPUS_LIFE_DATA.LIB_STATUS}</Text>
+            </View>
+          </View>
+
           {/* Hızlı Erişim & İşlemler Grid */}
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{LABELS.QUICK_ACCESS}</Text>
           <View style={styles.gridContainer}>
             <TouchableOpacity
-              style={[styles.gridCard, { backgroundColor: colors.accentLight, borderColor: colors.accent }]}
-              onPress={() => router.push(ROUTES.AI_ASSISTANT as any)}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.gridText, { color: colors.accent, fontWeight: "800" }]}>{LABELS.BTN_AI}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.gridCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}
+              style={[styles.gridCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
               onPress={() => router.push(ROUTES.FOCUS as any)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.gridText, { color: colors.primary, fontWeight: "800" }]}>{LABELS.BTN_FOCUS}</Text>
+              <Text style={[styles.gridText, { color: colors.text }]}>{LABELS.BTN_FOCUS}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -239,11 +253,11 @@ export default function HomeScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.gridCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}
+              style={[styles.gridCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
               onPress={() => router.push(ROUTES.PROFILE as any)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.gridText, { color: colors.primary }]}>{LABELS.BTN_PROFILE}</Text>
+              <Text style={[styles.gridText, { color: colors.text }]}>{LABELS.BTN_PROFILE}</Text>
             </TouchableOpacity>
           </View>
 
@@ -400,4 +414,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   emptyText: { fontSize: 14 },
+  campusLifeCard: {
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 24,
+    borderWidth: 1,
+  },
+  campusLifeHeader: { marginBottom: 12 },
+  campusLifeTitle: { fontSize: 15, fontWeight: "800" },
+  campusLifeSection: { paddingVertical: 4 },
+  campusLifeSub: { fontSize: 13, fontWeight: "700", marginBottom: 4 },
+  campusLifeText: { fontSize: 13, lineHeight: 18 },
+  campusLifeDivider: { height: 1, marginVertical: 10 },
 });
